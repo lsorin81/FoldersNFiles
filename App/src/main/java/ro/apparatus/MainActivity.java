@@ -22,10 +22,12 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
-//    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     Context ctx;
+    FavoritesSectionFragment  favoritesFragment;
+    FilesSectionFragment filesFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
-//                        Log.i(TAG, "inside ViewPager Listener!");
                         actionBar.setSelectedNavigationItem(position);
                     }
                 });
@@ -73,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
+
     }
 
     @Override
@@ -88,26 +90,29 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a DummySectionFragment (defined as a static inner class
-            // below) with the page number as its lone argument.
+            Fragment fragment=null;
             switch (position){
                 case 0:
                     // construct the Files Section
-                    Fragment filesFragment = new FilesSectionFragment(ctx);
+                    filesFragment = new FilesSectionFragment(ctx);
+                    Log.e(TAG, filesFragment.toString());
                     Bundle filesArgs = new Bundle();
                     filesArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     filesFragment.setArguments(filesArgs);
-                    return filesFragment;
+                    fragment = filesFragment;
+                    break;
                 case 1:
                     // construct the Favorites Section
-                    Fragment favoritesFragment = new FavoritesSectionFragment(ctx);
+                    favoritesFragment = new FavoritesSectionFragment(ctx);
+                    Log.e(TAG, favoritesFragment.toString());
                     Bundle favArgs = new Bundle();
                     favArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     favoritesFragment.setArguments(favArgs);
-                    return favoritesFragment;
+                    fragment = favoritesFragment;
+                    break;
             }
-            return null;
+            filesFragment.linkFavorites(favoritesFragment);
+            return fragment;
         }
 
         @Override

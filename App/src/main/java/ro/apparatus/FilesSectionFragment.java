@@ -17,17 +17,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.Arrays;
 
 
 public class FilesSectionFragment extends ListFragment {
     private static final String TAG = FilesSectionFragment.class.getSimpleName();
     public static final String ARG_SECTION_NUMBER = "section_number";
-    ArrayAdapter<String> folderAdapter;
-    ArrayAdapter<String> fileAdapter;
+    ArrayAdapter adapter;
     Context ctx;
     private int noOfFolders=0;
+    FavoritesSectionFragment favoritesFragment;
     public FilesSectionFragment(Context context) {
         ctx = context;
     }
@@ -39,18 +38,29 @@ public class FilesSectionFragment extends ListFragment {
         String[] result = new String[folders.length+files.length];
         System.arraycopy(folders, 0, result, 0, folders.length);
         System.arraycopy(files, 0, result, folders.length, files.length);
+        // noOfFolders has to be initiated properly
         noOfFolders = folders.length;
-        folderAdapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, result);
-        setListAdapter(folderAdapter);
+        adapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, result);
+        setListAdapter(adapter);
         Toast.makeText(ctx, "Press files to add them to Favorites!", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        final int GOLD = getResources().getColor(R.color.gold);
         if(position >= noOfFolders){
+            if(((TextView) v).getCurrentTextColor() == GOLD){
+                Toast.makeText(ctx, "Already added to Favorites!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Toast.makeText(ctx, "File added to Favorites!", Toast.LENGTH_SHORT).show();
-            ((TextView) v).setTextColor(getResources().getColor(R.color.gold));
+            ((TextView) v).setTextColor(GOLD);
             // add to favorites
-            // refresh favorites tab
+            //check if the file is not already a favorite;
+            favoritesFragment.addItem(((TextView) v).getText().toString());
+//            refresh favorites tab
         }
+    }
+    public void linkFavorites(FavoritesSectionFragment fav){
+        favoritesFragment = fav;
     }
 }
