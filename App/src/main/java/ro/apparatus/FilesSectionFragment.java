@@ -1,7 +1,9 @@
 package ro.apparatus;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+
 public class FilesSectionFragment extends ListFragment {
     private static final String TAG = FilesSectionFragment.class.getSimpleName();
     public static final String ARG_SECTION_NUMBER = "section_number";
@@ -33,7 +36,8 @@ public class FilesSectionFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         String[] folders = new String[]{"FOLDER1", "FOLDER2", "FOLDER3"};
         String[] files = new String[]{"abc.txt", "file1.txt", "file2.txt", "file3.txt", "file4.txt"};
-        String[] result = Arrays.copyOf(folders, folders.length + files.length);
+        String[] result = new String[folders.length+files.length];
+        System.arraycopy(folders, 0, result, 0, folders.length);
         System.arraycopy(files, 0, result, folders.length, files.length);
         noOfFolders = folders.length;
         folderAdapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, result);
@@ -45,9 +49,8 @@ public class FilesSectionFragment extends ListFragment {
         if(position >= noOfFolders){
             Toast.makeText(ctx, "File added to Favorites!", Toast.LENGTH_SHORT).show();
             ((TextView) v).setTextColor(getResources().getColor(R.color.gold));
-
             // add to favorites
+            // refresh favorites tab
         }
-
     }
 }

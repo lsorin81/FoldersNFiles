@@ -19,6 +19,7 @@ import java.util.List;
 public class FavoritesSectionFragment extends ListFragment {
     private static final String TAG = FavoritesSectionFragment.class.getSimpleName();
     public static final String ARG_SECTION_NUMBER = "section_number";
+    ArrayAdapter<String> adapter;
     Context ctx;
     public FavoritesSectionFragment(Context context) {
         ctx = context;
@@ -26,14 +27,35 @@ public class FavoritesSectionFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String[] values = new String[] { "file1", "file2" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(ctx,
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
+        // get favorites from preferences
+        getItemsFromSharedPreferences();
+        printList();
+        addItem("file37.txt");
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.e(TAG, "inside onListItemClick()");
-
     }
+    private void getItemsFromSharedPreferences(){
+        adapter = new ArrayAdapter<>(ctx,
+                android.R.layout.simple_list_item_1, new String[] { "file1", "file2" });
+        setListAdapter(adapter);
+    }
+    private void printList(){
+        Log.e(TAG, "inside printList()");
+        int noOfCells = adapter.getCount();
+        for(int i=0;i<noOfCells;i++){
+            Log.e(TAG, adapter.getItem(i));
+        }
+    }
+    public void addItem(String s){
+        int noOfCells = adapter.getCount();
+        String[] stringToAdd = new String[noOfCells+1];
+        for(int i=0;i<noOfCells;i++){
+            stringToAdd[i] = adapter.getItem(i);
+        }
+        stringToAdd[noOfCells] = s;
+        adapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, stringToAdd);
+        setListAdapter(adapter);
+    }
+
 }
