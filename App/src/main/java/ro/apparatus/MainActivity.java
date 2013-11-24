@@ -1,5 +1,6 @@
 package ro.apparatus;
 
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,10 +25,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 //    private static final String TAG = MainActivity.class.getSimpleName();
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    Context ctx;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ctx = this;
         final ActionBar actionBar = this.getSupportActionBar();
         actionBar.setNavigationMode(android.app.ActionBar.NAVIGATION_MODE_TABS);
         // the adapter that will return a fragment for each  section
@@ -91,14 +94,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch (position){
                 case 0:
                     // construct the Files Section
-                    Fragment filesFragment = new FilesSectionFragment();
+                    Fragment filesFragment = new FilesSectionFragment(ctx);
                     Bundle filesArgs = new Bundle();
                     filesArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     filesFragment.setArguments(filesArgs);
                     return filesFragment;
                 case 1:
                     // construct the Favorites Section
-                    Fragment favoritesFragment = new FavoritesSectionFragment();
+                    Fragment favoritesFragment = new FavoritesSectionFragment(ctx);
                     Bundle favArgs = new Bundle();
                     favArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     favoritesFragment.setArguments(favArgs);
@@ -123,20 +126,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return getString(R.string.title_section2).toUpperCase(l);
             }
             return null;
-        }
-    }
-    public static class DummySectionFragment extends Fragment {
-        public static final String ARG_SECTION_NUMBER = "section_number";
-        public DummySectionFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_dummy, container, false);
-            TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-            dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
         }
     }
 

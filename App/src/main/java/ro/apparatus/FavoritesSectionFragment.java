@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,22 +17,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritesSectionFragment extends ListFragment {
+    private static final String TAG = FavoritesSectionFragment.class.getSimpleName();
     public static final String ARG_SECTION_NUMBER = "section_number";
-    public FavoritesSectionFragment() {
+    Context ctx;
+    public FavoritesSectionFragment(Context context) {
+        ctx = context;
     }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         String[] values = new String[] { "file1", "file2" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(ctx,
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // do something with the data
+        Log.e(TAG, "inside onListItemClick()");
 
     }
 }
