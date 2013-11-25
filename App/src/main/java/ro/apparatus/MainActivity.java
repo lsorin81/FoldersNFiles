@@ -1,6 +1,7 @@
 package ro.apparatus;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,10 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -54,6 +51,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
     }
+    @Override
+    protected void onStop(){
+        if(favoritesFragment!=null){
+            favoritesFragment.t.cancel();
+        }
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent goToSettings = new Intent(ctx, Settings.class);
+            startActivity(goToSettings);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -74,7 +80,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
-
     }
 
     @Override
@@ -95,7 +100,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 0:
                     // construct the Files Section
                     filesFragment = new FilesSectionFragment(ctx);
-                    Log.e(TAG, filesFragment.toString());
                     Bundle filesArgs = new Bundle();
                     filesArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     filesFragment.setArguments(filesArgs);
@@ -104,8 +108,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 1:
                     // construct the Favorites Section
                     favoritesFragment = new FavoritesSectionFragment(ctx);
-                    favoritesFragment.linkFiles(filesFragment);
-                    Log.e(TAG, favoritesFragment.toString());
                     Bundle favArgs = new Bundle();
                     favArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
                     favoritesFragment.setArguments(favArgs);
@@ -119,7 +121,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public int getCount() {
-            // Show 2 total pages.
             return 2;
         }
 
