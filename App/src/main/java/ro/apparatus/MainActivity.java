@@ -104,6 +104,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 1:
                     // construct the Favorites Section
                     favoritesFragment = new FavoritesSectionFragment(ctx);
+                    favoritesFragment.linkFiles(filesFragment);
                     Log.e(TAG, favoritesFragment.toString());
                     Bundle favArgs = new Bundle();
                     favArgs.putInt(FavoritesSectionFragment.ARG_SECTION_NUMBER, position + 1);
@@ -112,6 +113,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     break;
             }
             filesFragment.linkFavorites(favoritesFragment);
+
             return fragment;
         }
 

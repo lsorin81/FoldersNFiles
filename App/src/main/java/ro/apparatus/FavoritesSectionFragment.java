@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +31,28 @@ public class FavoritesSectionFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         adapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, new String[0]);
         setListAdapter(adapter);
+        Toast.makeText(ctx, "Press files to delete them from favorite list!", Toast.LENGTH_SHORT);
         getItemsFromSharedPreferences();
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        String[] stringMinusOne;
+        int noOfCells;
+        if(!(adapter == null)){
+            noOfCells = adapter.getCount();
+            stringMinusOne = new String[noOfCells-1];
+            int j=0;
+            for(int i=0;i<noOfCells;i++){
+                if(adapter.getItem(i).equals(((TextView) v).getText().toString())){
+                    Toast.makeText(ctx, "Favorite Removed!", Toast.LENGTH_SHORT).show();
+                    continue;
+                }
+                stringMinusOne[j]= adapter.getItem(i);
+                j++;
+            }
+            adapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, stringMinusOne);
+            setListAdapter(adapter);
+        }
     }
     private void getItemsFromSharedPreferences(){
 //        adapter = new ArrayAdapter<>(ctx,
@@ -47,6 +66,10 @@ public class FavoritesSectionFragment extends ListFragment {
             noOfCells = adapter.getCount();
             stringToAdd = new String[noOfCells+1];
             for(int i=0;i<noOfCells;i++){
+                if(adapter.getItem(i).equals(s)){
+                    Toast.makeText(ctx, "Item already added!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 stringToAdd[i] = adapter.getItem(i);
             }
         }
@@ -55,6 +78,7 @@ public class FavoritesSectionFragment extends ListFragment {
             noOfCells = 0;
         }
         stringToAdd[noOfCells] = s;
+        Toast.makeText(ctx, "File added to Favorites!", Toast.LENGTH_SHORT).show();
         adapter = new ArrayAdapter<>(ctx, android.R.layout.simple_list_item_1, stringToAdd);
         setListAdapter(adapter);
     }

@@ -25,6 +25,9 @@ public class FilesSectionFragment extends ListFragment {
     public static final String ARG_SECTION_NUMBER = "section_number";
     ArrayAdapter adapter;
     Context ctx;
+    String[] folders;
+    String[] files;
+    String[] result;
     private int noOfFolders=0;
     FavoritesSectionFragment favoritesFragment;
     public FilesSectionFragment(Context context) {
@@ -33,9 +36,9 @@ public class FilesSectionFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String[] folders = new String[]{"FOLDER1", "FOLDER2", "FOLDER3"};
-        String[] files = new String[]{"abc.txt", "file1.txt", "file2.txt", "file3.txt", "file4.txt"};
-        String[] result = new String[folders.length+files.length];
+        folders = new String[]{"FOLDER1", "FOLDER2", "FOLDER3"};
+        files = new String[]{"abc.txt", "file1.txt", "file2.txt", "file3.txt", "file4.txt"};
+        result = new String[folders.length+files.length];
         System.arraycopy(folders, 0, result, 0, folders.length);
         System.arraycopy(files, 0, result, folders.length, files.length);
         // noOfFolders has to be initiated properly
@@ -46,21 +49,12 @@ public class FilesSectionFragment extends ListFragment {
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        final int GOLD = getResources().getColor(R.color.gold);
         if(position >= noOfFolders){
-            if(((TextView) v).getCurrentTextColor() == GOLD){
-                Toast.makeText(ctx, "Already added to Favorites!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Toast.makeText(ctx, "File added to Favorites!", Toast.LENGTH_SHORT).show();
-            ((TextView) v).setTextColor(GOLD);
-            // add to favorites
-            //check if the file is not already a favorite;
             favoritesFragment.addItem(((TextView) v).getText().toString());
-//            refresh favorites tab
         }
     }
     public void linkFavorites(FavoritesSectionFragment fav){
         favoritesFragment = fav;
     }
+
 }
